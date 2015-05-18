@@ -5,16 +5,28 @@ class Nutcase
   module BIN
     extend self
 
+    attr_accessor :config_file, :args
+
     def server
       args = []
-      args.concat(argv)
+
+      unless argv.count == 0
+        args.concat(argv)
+      else
+        config_file ||= './config/nutcase.rb'
+
+        if File.file? config_file
+          # TODO: make the config file format nicer
+          instance_eval(File.read(config_file), config_file)
+        end
+      end
 
       options = {
         cmd: args.join(' '),
         signal: 'TERM',
         background: true,
         growl: false,
-        name: 'Nutcase Server',
+        name: 'Nutcase',
         ignore: [],
         dir: ['.'],
         pattern: "{Gemfile,Gemfile.lock,.gems,.bundle,.env*,config.ru,Rakefile,**/*.{rb,js,coffee,css,scss,sass,styl,erb,html,haml,ru,yml,slim,md,mab,rake}}"
