@@ -7,18 +7,14 @@ class Nutcase
 
     attr_accessor :config_file, :args
 
-    def server
-      args = []
+    def run
+      self.args = []
+      self.config_file ||= './config/nutcase.rb'
 
-      unless argv.count == 0
+      if argv.count > 0
         args.concat(argv)
-      else
-        config_file ||= './config/nutcase.rb'
-
-        if File.file? config_file
-          # TODO: make the config file format nicer
-          instance_eval(File.read(config_file), config_file)
-        end
+      elsif File.file? config_file
+        instance_eval(File.read(config_file), config_file)
       end
 
       options = {
@@ -29,10 +25,14 @@ class Nutcase
         name: 'Nutcase',
         ignore: [],
         dir: ['.'],
-        pattern: "{Gemfile,Gemfile.lock,.gems,.bundle,.env*,config.ru,Rakefile,**/*.{rb,js,coffee,css,scss,sass,styl,erb,html,haml,ru,yml,slim,md,mab,rake}}"
+        pattern: '{Gemfile,Gemfile.lock,.gems,.bundle,.env*,config.ru,Rakefile,**/*.{rb,js,coffee,css,scss,sass,styl,erb,html,haml,ru,yml,slim,md,mab,rake}}'
       }
 
       Rerun::Runner.keep_running(options[:cmd], options)
+    end
+
+    def server(opts)
+      args.concat(opts)
     end
 
     def envs
