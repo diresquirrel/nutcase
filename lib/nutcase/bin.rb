@@ -6,8 +6,6 @@ class Nutcase
     extend self
 
     def server
-      port = ENV['PORT'] || 8080
-
       args = []
       args.concat(argv)
 
@@ -18,7 +16,7 @@ class Nutcase
         growl: false,
         name: 'Nutcase Server',
         ignore: [],
-        dir: ["."],
+        dir: ['.'],
         pattern: "{Gemfile,Gemfile.lock,.gems,.bundle,.env*,config.ru,Rakefile,**/*.{rb,js,coffee,css,scss,sass,styl,erb,html,haml,ru,yml,slim,md,mab,rake}}"
       }
 
