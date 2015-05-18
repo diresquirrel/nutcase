@@ -1,0 +1,26 @@
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+ENV['RACK_ENV'] ||= 'development'
+
+env      = '.env'
+rack_env = "#{env}.#{ENV['RACK_ENV']}"
+
+if File.file? env
+  File.foreach env do |line|
+    key, value = line.split "=", 2
+    ENV[key] = value.gsub('\n', '').strip
+  end
+end
+
+if File.file? rack_env
+  File.foreach rack_env do |line|
+    key, value = line.split "=", 2
+    ENV[key] = value.gsub('\n', '').strip
+  end
+end
+
+$LOAD_PATH << File.expand_path(File.join(File.dirname(__FILE__), '../lib'))
+require 'nutcase/bin'
+
+Nutcase::BIN.server
